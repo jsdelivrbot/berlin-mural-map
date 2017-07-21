@@ -1,0 +1,22 @@
+doctype html
+html
+    head
+        title= title
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        link(rel='stylesheet', href='/stylesheets/image-picker.css')
+        link(rel='stylesheet', href='/stylesheets/Leaflet.Photo.css')
+        link(rel='stylesheet', href='/stylesheets/MarkerCluster.css')
+        link(rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css")
+        link(rel="stylesheet" href="https://unpkg.com/leaflet-geotag-photo@0.5.1/dist/Leaflet.GeotagPhoto.css")
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.9.0/css/lightbox.min.css")
+    body
+        block content
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js")
+        script(src='https://unpkg.com/leaflet@1.1.0/dist/leaflet.js')
+        script(src='/javascripts/leaflet.markercluster.js')
+        script(src='/javascripts/Leaflet.Photo.js')
+        script(src='/javascripts/piexif.js')
+        script(src='/javascripts/global.js')
+        script(src='/javascripts/image-picker.min.js')
+        script(src="https://unpkg.com/leaflet-geotag-photo@0.5.1/dist/Leaflet.GeotagPhoto.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.9.0/js/lightbox.min.js")
