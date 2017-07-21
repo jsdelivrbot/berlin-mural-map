@@ -15,9 +15,6 @@ var baseLayers = {
 init();
 
 function init(){
-  $("#edit").hide();
-  $("#selection").hide();
-
   map = L.map('map');
   addControlLayer();
 
@@ -155,13 +152,8 @@ function parseData(){
       var thumbPath = ($(".image-picker option:selected").attr("data-img-src"));
       var caption = $("input[name='caption']").val();
 
-      console.log(caption);
-
       var lat = geotaggedPoint.coordinates[1];
       var lon = geotaggedPoint.coordinates[0];
-
-      //TODO: update on server
-      console.log("update", photoPath, lat, lon);
 
       var update = {
         lat: lat,

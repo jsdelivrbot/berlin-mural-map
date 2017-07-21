@@ -7,7 +7,7 @@ var router = express.Router(),
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Berlin Murals' });
 });
 
 router.post('/update', function(req, res, next) {
@@ -20,8 +20,6 @@ router.post('/update', function(req, res, next) {
 
   var zeroth = exifObj["0th"], exif = exifObj.Exif, gps = exifObj.GPS;
   inter = exifObj.Interop, first = exifObj["1st"], thumbnail = exifObj.thumbnail;
-
-console.log(req.body);
 
       gps[piexif.GPSIFD.GPSLatitudeRef] = lat < 0 ? 'S' : 'N';
       gps[piexif.GPSIFD.GPSLatitude] = piexif.GPSHelper.degToDmsRational(lat);

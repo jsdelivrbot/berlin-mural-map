@@ -9,4 +9,8 @@ html, body {
 
 img {
  image-orientation: from-image;
- }
+}
+
+#edit, #selection{
+  display: none;
+}
