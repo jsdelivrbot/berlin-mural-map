@@ -3,7 +3,7 @@ extends layout
 block content
     #map
     button#editButton(onclick="edit()") Edit
-    a(href="/data/images.kml" download) Download KML 
+    a(href="/data/images.kml" download="berlin murals.kml") Download KML 
 
     #edit
       button#tagButton(onclick="toggleGeotag()") Geotag
