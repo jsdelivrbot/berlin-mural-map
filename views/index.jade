@@ -3,13 +3,17 @@ extends layout
 block content
     #map
     button#editButton(onclick="edit()") Edit
+    a(href="/data/images.kml" download) Download KML 
 
     #edit
       button#tagButton(onclick="toggleGeotag()") Geotag
       label(for="caption") Caption:
       input(type="text" name="caption")
+      label(for="lat") Lat:
+      input(type="text" name="lat")
+      label(for="lon") Lon:
+      input(type="text" name="lon")
       button#saveButton(onclick="save()") Save
-      samp#output
 
     #gallery
 

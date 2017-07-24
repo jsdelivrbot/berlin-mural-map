@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var piexif = require('./vendor/piexif.js');
+var builder = require('xmlbuilder');
 
 var imagesDir = "public/images", thumbsDir = "public/images/thumbnails";
 
@@ -14,8 +15,84 @@ var coords = getCoords();
 
 fs.writeFile('public/data/images.json', JSON.stringify(coords), function (err) {
   if (err) throw err;
-  console.log('It\'s saved!');
 });
+
+writeKML();
+
+function writeKML(){
+var kml = builder.create('kml', { encoding: 'utf-8' })
+    .att('xmlns', 'http://earth.google.com/kml/2.2');
+var doc = kml.ele('Document');
+doc.ele('Style', {"id": "placemark-green"})
+   .ele('IconStyle')
+   .ele('Icon')
+   .ele('href', 'http://mapswith.me/placemarks/placemark-green.png');
+doc.ele('name', 'Berlin Murals');
+
+
+  coords.images.forEach(function(marker){
+    var caption = marker.caption;
+    if(caption.substring(0,1) === "\u0000"){
+        caption = "";
+    }
+
+    var place = doc.ele("Placemark")
+         .ele("name", caption).up()
+         .ele("styleUrl", "#placemark-green").up()
+         .ele("description", '<img src="https://berlin-mural-map.herokuapp.com/' + marker.url + '"/>').up();
+
+    place.ele("Point")
+          .ele("coordinates", marker.lon + "," + marker.lat);
+
+    place.ele("ExtendedData")
+         .ele("Data", {"name": "gx_media_links"})
+         .ele("value", "https://berlin-mural-map.herokuapp.com/" + marker.url );
+
+    kml.end();
+  });
+
+
+  fs.writeFile('public/data/images.kml', kml, function (err) {
+    if (err) throw err;
+  });
+}
+
+function writeKML(){
+var kml = builder.create('kml')
+    .att('xmlns', 'http://earth.google.com/kml/2.2');
+var doc = kml.ele('Document');
+doc.ele('Style', {"id": "placemark-green"})
+   .ele('IconStyle')
+   .ele('Icon')
+   .ele('href', 'http://mapswith.me/placemarks/placemark-green.png');
+doc.ele('name', 'Berlin Murals');
+
+  coords.images.forEach(function(marker){
+    var caption = marker.caption;
+    if(caption.substring(0,1) === "\u0000"){
+        caption = "";
+    }
+
+    var place = doc.ele("Placemark")
+         .ele("name", caption).up()
+         .ele("styleUrl", "#placemark-green").up()
+         .ele("description", '<img src="https://berlin-mural-map.herokuapp.com/' + marker.url + '"/>').up();
+
+    place.ele("Point")
+          .ele("coordinates", marker.lon + "," + marker.lat);
+
+    place.ele("ExtendedData")
+         .ele("Data", {"name": "gx_media_links"})
+         .ele("value", "https://berlin-mural-map.herokuapp.com/" + marker.url );
+
+    kml.end();
+  });
+
+
+  fs.writeFile('public/data/images.kml', kml, function (err) {
+    if (err) throw err;
+  });
+}
 
 function getCoords() {
   var coords = {
@@ -34,8 +111,6 @@ function getCoords() {
       var jpeg = fs.readFileSync(path);
       var data = jpeg.toString("binary");
       var exifObj = piexif.load(data);
-
-      console.log("gps", exifObj.GPS);
 
       //check if empty object or undefined
       if (Object.keys(exifObj.GPS).length !== 0 && exifObj.GPS.constructor === Object) {

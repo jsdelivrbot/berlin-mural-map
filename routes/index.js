@@ -10,6 +10,12 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Berlin Murals' });
 });
 
+/* GET home page. */
+router.get('/kml', function(req, res, next) {
+  var filename = './public/data/images.kml';
+  res.download(filename, 'murals.kml');
+});
+
 router.post('/update', function(req, res, next) {
   var photoPath = './public/' + req.body.url;
   var lat = req.body.lat, lon = req.body.lon, caption = req.body.caption;
@@ -21,12 +27,15 @@ router.post('/update', function(req, res, next) {
   var zeroth = exifObj["0th"], exif = exifObj.Exif, gps = exifObj.GPS;
   inter = exifObj.Interop, first = exifObj["1st"], thumbnail = exifObj.thumbnail;
 
-      gps[piexif.GPSIFD.GPSLatitudeRef] = lat < 0 ? 'S' : 'N';
-      gps[piexif.GPSIFD.GPSLatitude] = piexif.GPSHelper.degToDmsRational(lat);
-      gps[piexif.GPSIFD.GPSLongitudeRef] = lon < 0 ? 'W' : 'E';
-      gps[piexif.GPSIFD.GPSLongitude] = piexif.GPSHelper.degToDmsRational(lon);
+//TODO: remove this later as we want user to decide what to update
+if(lat !== undefined && lon !== undefined){
+     gps[piexif.GPSIFD.GPSLatitudeRef] = lat < 0 ? 'S' : 'N';
+     gps[piexif.GPSIFD.GPSLatitude] = piexif.GPSHelper.degToDmsRational(lat);
+     gps[piexif.GPSIFD.GPSLongitudeRef] = lon < 0 ? 'W' : 'E';
+     gps[piexif.GPSIFD.GPSLongitude] = piexif.GPSHelper.degToDmsRational(lon);
+ }
 
-    exif[piexif.ExifIFD.UserComment] = caption;
+  exif[piexif.ExifIFD.UserComment] = caption;
 
   var exifObj = {"0th":zeroth, "Exif":exif, "GPS":gps, "Interop" : inter, "1st": first, "thumbnail" : thumbnail};
   var exifbytes = piexif.dump(exifObj);

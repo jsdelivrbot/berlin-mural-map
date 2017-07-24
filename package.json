@@ -15,11 +15,16 @@
     "jquery": "^3.2.1",
     "lightbox2": "^2.9.0",
     "morgan": "~1.8.1",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "~2.4.2",
+    "xmlbuilder": "^9.0.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-minify": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robole/berlin-mural-map.git"
   },
   "engines": {
     "node": "6.10.2"

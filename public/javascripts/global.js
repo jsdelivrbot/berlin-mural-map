@@ -99,7 +99,7 @@ function parseData(){
     if(geotagPhotoCrosshair === undefined){
       geotagPhotoCrosshair = L.geotagPhoto.crosshair({crosshairHTML: "<img src='images/crosshair.svg' width='100px' />"}).addTo(map)
             .on('input', function (event) {
-                updateSample();
+                updateTextboxes();
           })
     }else{
         geotagPhotoCrosshair.removeFrom(map);
@@ -120,9 +120,10 @@ function parseData(){
       $(".image-picker").imagepicker();
   }
 
-  function updateSample() {
+  function updateTextboxes() {
         geotaggedPoint = geotagPhotoCrosshair.getCrosshairPoint()
-        gpsOutput.innerHTML = JSON.stringify(geotaggedPoint, null, 2)
+        $("input[name='lat']").val(geotaggedPoint.coordinates[1]);
+        $("input[name='lon']").val(geotaggedPoint.coordinates[0]);
   }
 
   function edit(){
@@ -147,21 +148,30 @@ function parseData(){
   }
 
   function save(){
-    if(geotagPhotoCrosshair !== undefined && geotaggedPoint !== undefined){
       var photoPath = ($(".image-picker option:selected").attr("data-img-src")).replace("thumbnails/", "");
       var thumbPath = ($(".image-picker option:selected").attr("data-img-src"));
       var caption = $("input[name='caption']").val();
 
-      var lat = geotaggedPoint.coordinates[1];
-      var lon = geotaggedPoint.coordinates[0];
+      var lat = $("input[name='lat']").val();
+      var lon = $("input[name='lon']").val();
+      var update = {};
 
-      var update = {
-        lat: lat,
-        lon: lon,
-        url: photoPath,
-        caption: caption,
-        thumb: thumbPath
-      };
+      if(lat.length === 0 || lon.length === 0){
+        update = {
+          url: photoPath,
+          caption: caption,
+          thumb: thumbPath
+        };
+      }
+      else {
+        update = {
+          lat: lat,
+          lon: lon,
+          url: photoPath,
+          caption: caption,
+          thumb: thumbPath
+        };
+      }
 
       // Use AJAX to post the object to our adduser service
         $.ajax({
@@ -181,31 +191,27 @@ function parseData(){
         });
 
 
-      var found = updatePhoto(photoPath, lat, lon);
+      var found = updatePhoto(photoPath, lat, lon, caption);
 
       if (!found){
-           photos.push({
-             lat: lat,
-             lng: lon,
-             url: photoPath,
-             caption: "caption",
-             thumbnail: thumbPath
-           });
-         }
+           photos.push(update);
+      }
 
        map.removeLayer(photoLayer);
        photoLayer = createPhotoLayer();
        photoLayer.add(photos).addTo(map);
        map.fitBounds(photoLayer.getBounds());
-    }
   }
 
-  function updatePhoto(photoPath, lat, lon){
+  function updatePhoto(photoPath, lat, lon, caption){
     var found = false;
     for(var i=0; el=photos[i]; i++) {
       if (el.url === photoPath) {
+          if(lat.length !== 0 || lon.length !== 0){
           el.lat = lat;
           el.lng = lon;
+        }
+          el.caption = caption;
           found = true;
           break;
       }
