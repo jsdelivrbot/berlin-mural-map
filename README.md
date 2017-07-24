@@ -2,9 +2,11 @@
 
 A map showing the street murals in Berlin. Each mural is represented as image thumbnail that can be clicked on for more info. All murals can be viewed in the gallery at the bottom of the page.
 
-Each mural can be geotagged and the caption can be edited. A KML can be downloaded of all the murals.
+Each mural can be geotagged and the caption can be edited, changes are saved in the EXIF data of the image for now.
 
-Uses [Express 4](http://expressjs.com/).
+A KML can be downloaded of all the murals.
+
+[Demo](https://berlin-mural-map.herokuapp.com/)
 
 ## Running Locally
 
